@@ -10,7 +10,7 @@ public class Checkout {
      * @param prices A HashMap with the prices of the items with key the SKU and value the Price
      * @return The total cost of the bought items
      */
-    public static double calculateCost(ArrayList<String> SKUs, HashMap<String, Price> prices) {
+    public static double calculateCost(ArrayList<String> SKUs, HashMap<String, Price> prices) throws Exception {
         // We use a HashMap to count the amount of each bought item
         HashMap<String, Integer> boughtItems = new HashMap<String, Integer>();
 
@@ -23,6 +23,11 @@ public class Checkout {
         // We calculate the total cost
         for(Map.Entry<String, Integer> item : boughtItems.entrySet()) {
             Price p = prices.get(item.getKey());
+
+            if(p==null) {
+                throw new Exception("There is no price rule for SKU "+item.getKey());
+            }
+
             if(p.getSpecialPrice()>0) {
                 cost += (item.getValue() / p.getSpecialPriceNumber()) * p.getSpecialPrice() +
                         (item.getValue() % p.getSpecialPriceNumber()) * p.getPrice();
